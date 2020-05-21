@@ -55,7 +55,7 @@ var p = body.selectAll("p");
 p.datum(str);
 
 p.text(function(d, i){
-    return "第 "+ i + " 个元素绑定的数据是 " + d;
+    return "the "+ i + "th element binging data is " + d;
 });
 
 //binding data array to select set
@@ -355,9 +355,46 @@ var svg = d3.select("body")
     .attr("width", width)
     .attr("height", height);
 
-var circle = svg.append("circle");
+var padding = {left:30, right:30, top:20, bottom:20};
 
-circle.on("click",function(){
-  console.log(d3.event);
-})
+var dataset = [10, 20, 30, 40, 33, 24, 12, 5];
+
+// var svg = d3.select("body")
+//     .append("svg")
+//     .attr("width", width)
+//     .attr("height", height);
+
+// var circle = svg.append("circle");
+
+// circle.on("click",function(){
+//   console.log(d3.event);
+// });
+
+var rects = svg.selectAll(".MyRect")
+        .data(dataset)
+        .enter()
+        .append("rect")
+        .attr("class","MyRect")
+        .attr("transform","translate(" + padding.left + "," + padding.top + ")")
+        .attr("x",function(d,i){
+          return xScale(i) + rectPadding/2;
+        })
+        .attr("y",function(d){
+            return yScale(d);
+        })
+        .attr("width",xScale.bandwidth()-rectPadding)
+        .attr("height",function(d){
+          return height-padding.top-padding.bottom-yScale(d);
+        })
+        .attr("fill","steelblue")
+        .on("mouseover",function(d,i){
+          d3.select(this)
+              .attr("fill","yellow");
+        })
+        .on("mouseout",function(d,i){
+          d3.select(this)
+              .transition()
+              .duration(500)
+              .attr("fill","steelblue");
+        });
 
