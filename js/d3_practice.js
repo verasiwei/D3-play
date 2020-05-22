@@ -398,3 +398,43 @@ var rects = svg.selectAll(".MyRect")
               .attr("fill","steelblue");
         });
 
+//practice
+var svg = d3.select("body")
+            .append("svg")
+            .attr("width",window.innerWidth)
+            .attr("height",window.innerHeight);
+
+const margin = 60;
+var width = window.innerWidth-margin-margin;
+var height = window.innerHeight-margin-margin;
+//axis range
+var x = d3.scaleBand().rangeRound([0,width]).padding(0.1);
+var y = d3.scaleLinear().rangeRound([height,0]);
+var g = svg.append("g")
+           .attr("transform","`translate(${margin},${margin})`");
+
+const data = [12,15,43,24,94,35,38,59];
+x.domain([...Array(data.length).keys()]);
+y.domain([0,d3.max(data,(d) => d)]);
+g.append("g")
+ .attr("transform",`translate(0,${height})`)
+ .call(d3.axisBottom(x));
+g.append("g")
+ .call(d3.axisLeft(y))
+ .append("text")
+ .attr("fill","#000")
+ .attr("transform","rotate(-90)")
+ .attr("y",6)
+ .attr("dy","0.9em")
+ .attr("text-anchor","end")
+ .text("y axis");
+
+ g.selectAll('.bar')
+ .data(data)
+ .enter()
+ .append('rect')
+ .attr('class', 'bar')
+ .attr("x", (_, i) => x(i))
+ .attr("y", (d) => y(d))
+ .attr("width", x.bandwidth())
+ .attr("height", (d) => height - y(d));
